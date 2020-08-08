@@ -2,6 +2,18 @@
 Changelog for package radial_menu_backend
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.3.2 (2020-08-08)
+------------------
+* No changes
+
+0.3.1 (2020-08-06)
+------------------
+* No changes
+
+0.3.0 (2020-08-03)
+------------------
+* Menu item tree from parameter using the radial_menu_model package
+
 0.2.0 (2020-07-26)
 ------------------
 * Install targets
