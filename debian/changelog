@@ -1,0 +1,22 @@
+ros-melodic-radial-menu-model (0.3.2-1bionic) bionic; urgency=high
+
+  * Rename attribute 'url' to 'imgurl'
+  * Install targets
+
+ -- Yoshito Okada <okada@rm.is.tohoku.ac.jp>  Fri, 07 Aug 2020 15:00:00 -0000
+
+ros-melodic-radial-menu-model (0.3.1-1bionic) bionic; urgency=high
+
+  * Parse display types
+  * Support path-based access to Items
+
+ -- Yoshito Okada <okada@rm.is.tohoku.ac.jp>  Wed, 05 Aug 2020 15:00:00 -0000
+
+ros-melodic-radial-menu-model (0.3.0-1bionic) bionic; urgency=high
+
+  * Initial version
+  * Contributors: Yoshito Okada
+
+ -- Yoshito Okada <okada@rm.is.tohoku.ac.jp>  Sun, 02 Aug 2020 15:00:00 -0000
+
+
