@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>radial_menu</name>
-  <version>0.2.0</version>
+  <version>0.3.2</version>
   <description>The radial_menu package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
@@ -50,6 +50,7 @@
   <!--   <doc_depend>doxygen</doc_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
   <exec_depend>radial_menu_backend</exec_depend>
+  <exec_depend>radial_menu_model</exec_depend>
   <exec_depend>radial_menu_msgs</exec_depend>
   <exec_depend>radial_menu_rviz</exec_depend>
 
