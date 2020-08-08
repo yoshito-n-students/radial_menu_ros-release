@@ -2,6 +2,18 @@
 Changelog for package radial_menu_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.3.2 (2020-08-08)
+------------------
+* No changes
+
+0.3.1 (2020-08-06)
+------------------
+* No changes
+
+0.3.0 (2020-08-03)
+------------------
+* Remove fields about menu tree model from State message because menu tree model is provided from a parameter
+
 0.2.0 (2020-07-26)
 ------------------
 * Install targets
