@@ -2,6 +2,19 @@
 Changelog for package radial_menu_rviz
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.3.2 (2020-08-08)
+------------------
+* Fix system dependency (rviz)
+* Support the latest model description
+
+0.3.1 (2020-08-06)
+------------------
+* Support display types in RadialMenu
+
+0.3.0 (2020-08-03)
+------------------
+* Menu item tree from parameter using the radial_menu_model package
+
 0.2.0 (2020-07-26)
 ------------------
 * Install targets
