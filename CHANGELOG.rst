@@ -2,6 +2,20 @@
 Changelog for package radial_menu_example
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.3.2 (2020-08-08)
+------------------
+* No changes
+
+0.3.1 (2020-08-06)
+------------------
+* Use an emoji as the alternative text in the example teleop menu
+* Use radial_menu_model::Model in example_teleop_node
+
+0.3.0 (2020-08-03)
+------------------
+* Support the latest version of other packages
+* Rviz frontend example with random model manipulation
+
 0.2.0 (2020-07-26)
 ------------------
 * Install targets
