@@ -107,12 +107,10 @@ Radial menu on ROS1 for quick, accurate and intuitive selection by a joystick fr
 ## Pkg: radial_menu_rviz
 ### Rviz plugin: RadialMenu
 * Visualizes subscribed menu states as a radial menu
-* Supports display types of items
 * Shows the menu when the menu is being enabled
 
 ### Rviz plugin: HorizontalMenu
 * Visualizes subscribed menu states as a single-lined menu 
-* Displays the name of an item regardless of its display type
 * Always shows the menu
 
 ## Pkg: radial_menu_model
@@ -122,7 +120,7 @@ Radial menu on ROS1 for quick, accurate and intuitive selection by a joystick fr
 * Defines [State](radial_menu_msgs/msg/State.msg) message type
 
 ## Pkg: radial_menu
-* A meta-package depending radial_menu_backend, radial_menu_model, radial_menu_rviz, radial_menu_msgs for future release
+* A meta-package depending radial_menu_backend, radial_menu_model, radial_menu_msgs and radial_menu_rviz
 
 ## Pkg: radial_menu_example
 * Provides a [full example](radial_menu_example/launch/example_full.launch) which requires a joystick and a [Rviz frontend example](radial_menu_example/launch/example_rviz.launch) which does not
