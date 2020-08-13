@@ -1,0 +1,94 @@
+ros-melodic-radial-menu-msgs (0.3.4-1bionic) bionic; urgency=high
+
+  * No changes
+
+ -- Yoshito Okada <okada@rm.is.tohoku.ac.jp>  Thu, 13 Aug 2020 15:00:00 -0000
+
+ros-melodic-radial-menu-msgs (0.3.3-1bionic) bionic; urgency=high
+
+  * No changes
+
+ -- Yoshito Okada <okada@rm.is.tohoku.ac.jp>  Sat, 08 Aug 2020 15:00:00 -0000
+
+ros-melodic-radial-menu-msgs (0.3.2-1bionic) bionic; urgency=high
+
+  * No changes
+
+ -- Yoshito Okada <okada@rm.is.tohoku.ac.jp>  Fri, 07 Aug 2020 15:00:00 -0000
+
+ros-melodic-radial-menu-msgs (0.3.1-1bionic) bionic; urgency=high
+
+  * No changes
+
+ -- Yoshito Okada <okada@rm.is.tohoku.ac.jp>  Wed, 05 Aug 2020 15:00:00 -0000
+
+ros-melodic-radial-menu-msgs (0.3.0-1bionic) bionic; urgency=high
+
+  * Remove fields about menu tree model from State message because menu tree model is provided from a parameter
+
+ -- Yoshito Okada <okada@rm.is.tohoku.ac.jp>  Sun, 02 Aug 2020 15:00:00 -0000
+
+ros-melodic-radial-menu-msgs (0.2.0-1bionic) bionic; urgency=high
+
+  * Install targets
+
+ -- Yoshito Okada <okada@rm.is.tohoku.ac.jp>  Sat, 25 Jul 2020 15:00:00 -0000
+
+ros-melodic-radial-menu-msgs (0.1.4-1bionic) bionic; urgency=high
+
+  * No changes
+
+ -- Yoshito Okada <okada@rm.is.tohoku.ac.jp>  Sat, 25 Jul 2020 15:00:00 -0000
+
+ros-melodic-radial-menu-msgs (0.1.3-1bionic) bionic; urgency=high
+
+  * No changes
+
+ -- Yoshito Okada <okada@rm.is.tohoku.ac.jp>  Thu, 23 Jul 2020 15:00:00 -0000
+
+ros-melodic-radial-menu-msgs (0.1.2-1bionic) bionic; urgency=high
+
+  * No changes
+
+ -- Yoshito Okada <okada@rm.is.tohoku.ac.jp>  Thu, 23 Jul 2020 15:00:00 -0000
+
+ros-melodic-radial-menu-msgs (0.1.1-1bionic) bionic; urgency=high
+
+  * Add utility functions regarding State msg
+
+ -- Yoshito Okada <okada@rm.is.tohoku.ac.jp>  Wed, 22 Jul 2020 15:00:00 -0000
+
+ros-melodic-radial-menu-msgs (0.1.0-1bionic) bionic; urgency=high
+
+  * Add widths field in State message to support submenus
+  * Rename is_opened to is_enabled in State message
+
+ -- Yoshito Okada <okada@rm.is.tohoku.ac.jp>  Wed, 22 Jul 2020 15:00:00 -0000
+
+ros-melodic-radial-menu-msgs (0.0.4-1bionic) bionic; urgency=high
+
+  * No changes
+
+ -- Yoshito Okada <okada@rm.is.tohoku.ac.jp>  Mon, 20 Jul 2020 15:00:00 -0000
+
+ros-melodic-radial-menu-msgs (0.0.3-1bionic) bionic; urgency=high
+
+  * Refactor the open/close state in State to an boolean
+
+ -- Yoshito Okada <okada@rm.is.tohoku.ac.jp>  Sun, 19 Jul 2020 15:00:00 -0000
+
+ros-melodic-radial-menu-msgs (0.0.2-1bionic) bionic; urgency=high
+
+  * No changes
+
+ -- Yoshito Okada <okada@rm.is.tohoku.ac.jp>  Sat, 18 Jul 2020 15:00:00 -0000
+
+ros-melodic-radial-menu-msgs (0.0.1-1bionic) bionic; urgency=high
+
+  * Initial version
+  * Looks working on melodic and kinetic
+  * Contributors: Yoshito Okada
+
+ -- Yoshito Okada <okada@rm.is.tohoku.ac.jp>  Thu, 16 Jul 2020 15:00:00 -0000
+
+
