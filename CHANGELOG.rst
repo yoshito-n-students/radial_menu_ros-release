@@ -2,6 +2,16 @@
 Changelog for package radial_menu_rviz
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.4.1 (2020-08-27)
+------------------
+* No changes
+
+0.4.0 (2020-08-16)
+------------------
+* Support null items in RadialMenu
+* Use std's smart pointers
+* Suppress error console outputs on startup
+
 0.3.4 (2020-08-14)
 ------------------
 * Add system dependency to Qt
