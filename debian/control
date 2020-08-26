@@ -1,0 +1,12 @@
+Source: ros-melodic-radial-menu-rviz
+Section: misc
+Priority: optional
+Maintainer: Yoshito Okada <okada@rm.is.tohoku.ac.jp>
+Build-Depends: debhelper (>= 9.0.0), qtbase5-dev, ros-melodic-catkin, ros-melodic-radial-menu-model, ros-melodic-radial-menu-msgs, ros-melodic-roscpp, ros-melodic-rviz
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-melodic-radial-menu-rviz
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libqt5core5a, libqt5gui5, ros-melodic-radial-menu-model, ros-melodic-radial-menu-msgs, ros-melodic-roscpp, ros-melodic-rviz
+Description: The radial_menu_rviz package
