@@ -2,6 +2,15 @@
 Changelog for package radial_menu_backend
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.4.1 (2020-08-27)
+------------------
+* No changes
+
+0.4.0 (2020-08-16)
+------------------
+* Support null items
+* Use std's shared_ptr instead of boost's
+
 0.3.4 (2020-08-14)
 ------------------
 * No changes
