@@ -3,7 +3,7 @@
 
 #include <algorithm>
 #include <cstdint>
-#include <sstream>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -14,15 +14,11 @@
 #include <ros/param.h>
 #include <ros/time.h>
 
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/xml_parser.hpp>
-#include <boost/shared_ptr.hpp>
-
 namespace radial_menu_model {
 
 class Model;
-typedef boost::shared_ptr< Model > ModelPtr;
-typedef boost::shared_ptr< const Model > ModelConstPtr;
+typedef std::shared_ptr< Model > ModelPtr;
+typedef std::shared_ptr< const Model > ModelConstPtr;
 
 class Model {
 public:
@@ -100,109 +96,11 @@ public:
   // ***********
 
   // set new model tree description. also rests the state
-  bool setDescription(const std::string &new_desc) {
-    namespace bpt = boost::property_tree;
-
-    struct Internal {
-      static bool elementToItems(const bpt::ptree::value_type &elm,
-                                 std::vector< ItemConstPtr > *const items,
-                                 const ItemPtr &parent_item = ItemPtr()) {
-        // is the element name "item"?
-        if (elm.first != "item") {
-          ROS_ERROR_STREAM("Model::setDescription(): Invalid element '" << elm.first << "'");
-          return false;
-        }
-
-        // create an item and append it to the given list
-        const ItemPtr item(new Item());
-        item->item_id_ = items->size();
-        if (parent_item) {
-          item->parent_ = parent_item;
-          parent_item->children_.push_back(item);
-        }
-        items->push_back(item);
-
-        // load the item name from the attribute
-        if (!getAttribute(elm, "name", &item->name_)) {
-          ROS_ERROR("Model::setDescription(): No attribute 'name'");
-          return false;
-        }
-
-        // load the display type from the attribute
-        const std::string display(attribute(elm, "display", "name"));
-        if (display == "name") {
-          item->display_type_ = Item::Name;
-        } else if (display == "alttxt") {
-          item->display_type_ = Item::AltTxt;
-          if (!getAttribute(elm, "alttxt", &item->alt_txt_)) {
-            ROS_ERROR("Model::setDescription(): No attribute 'alttxt'");
-            return false;
-          }
-        } else if (display == "image") {
-          item->display_type_ = Item::Image;
-          if (!getAttribute(elm, "imgurl", &item->img_url_)) {
-            ROS_ERROR("Model::setDescription(): No attribute 'imgurl'");
-            return false;
-          }
-        } else {
-          ROS_ERROR_STREAM("Model::setDescription(): Unknown display type '" << display << "'");
-          return false;
-        }
-
-        // recursively update the given list
-        for (const bpt::ptree::value_type &child_elm : elm.second) {
-          if (child_elm.first == "<xmlattr>") {
-            continue;
-          }
-          if (!elementToItems(child_elm, items, item)) {
-            return false;
-          }
-        }
-
-        return true;
-      }
-
-      // get xml attribute like ros::param::param()
-      static std::string attribute(const bpt::ptree::value_type &elm, const std::string &attr,
-                                   const std::string &default_val) {
-        const boost::optional< std::string > val(
-            elm.second.get_optional< std::string >("<xmlattr>." + attr));
-        return val ? *val : default_val;
-      }
-
-      // get xml attribute like ros::param::getParam()
-      static bool getAttribute(const bpt::ptree::value_type &elm, const std::string &attr,
-                               std::string *const val) {
-        const boost::optional< std::string > opt_val(
-            elm.second.get_optional< std::string >("<xmlattr>." + attr));
-        if (opt_val) {
-          *val = *opt_val;
-          return true;
-        }
-        return false;
-      }
-    };
-
-    // parse the given xml string
-    bpt::ptree xml;
-    try {
-      std::istringstream iss(new_desc);
-      bpt::read_xml(iss, xml, bpt::xml_parser::no_comments);
-    } catch (const bpt::ptree_error &ex) {
-      ROS_ERROR_STREAM("Model::setDescription(): " << ex.what());
-      return false;
-    }
-
-    // find the root xml element
-    if (xml.size() != 1) {
-      ROS_ERROR("Model::setDescription(): Non unique root element in xml");
-      return false;
-    }
-    const bpt::ptree::value_type &root_elm(xml.front());
-
+  bool setDescription(const std::string &desc) {
     // populate items in the item tree
-    std::vector< ItemConstPtr > new_items;
-    if (!Internal::elementToItems(root_elm, &new_items)) {
+    const std::vector< ItemConstPtr > new_items(Item::itemsFromDescription(desc));
+    if (new_items.empty()) {
+      ROS_ERROR("Model::setDescription(): No items");
       return false;
     }
 
@@ -222,9 +120,9 @@ public:
 
   // set new description obtained from a ROS param server
   bool setDescriptionFromParam(const std::string &param_name) {
-    std::string new_desc;
-    if (ros::param::get(param_name, new_desc)) {
-      return setDescription(new_desc);
+    std::string desc;
+    if (ros::param::get(param_name, desc)) {
+      return setDescription(desc);
     } else {
       ROS_ERROR_STREAM("Model::setDescriptionFromParam(): Cannot get the param '" << param_name
                                                                                   << "'");
@@ -256,12 +154,14 @@ public:
     state_ = new_state;
 
     // update the current level by moving to the deepest level of selected items or its children
-    current_level_ = current_level_->root()->childLevel();
+    current_level_ = items_.front()->childLevel();
     for (const std::int32_t iid : state_.selected_ids) {
       if (iid >= 0 && iid < items_.size()) {
         const ItemConstPtr item(items_[iid]);
-        const ItemConstPtr level(item->children_.empty() ? item->sibilingLevel()
-                                                         : item->childLevel());
+        ItemConstPtr level(item->childLevel());
+        if (!level) {
+          level = item->sibilingLevel();
+        }
         if (level->depth() > current_level_->depth()) {
           current_level_ = level;
         }
@@ -300,7 +200,7 @@ public:
   // move the point to the given item
   void point(const ItemConstPtr &item) {
     if (canPoint(item)) {
-      state_.pointed_id = item->item_id_;
+      state_.pointed_id = item->itemId();
       return;
     }
     throw ros::Exception("Model::point()");
@@ -324,9 +224,9 @@ public:
   // Leaf selection / deselection
   // ****************************
 
-  // can select if the given item is in the current level, has no children, and is not selected
+  // can select if the given item is in the current level, has no child level, and is not selected
   bool canSelect(const ItemConstPtr &item) const {
-    return item && item->sibilingLevel() == current_level_ && item->children_.empty() &&
+    return item && item->sibilingLevel() == current_level_ && !item->childLevel() &&
            !isSelected(item);
   }
 
@@ -345,9 +245,9 @@ public:
     throw ros::Exception("Model::select()");
   }
 
-  // can deselect if the given item is in the current level, has no children, and is selected
+  // can deselect if the given item is in the current level, has no child level, and is selected
   bool canDeselect(const ItemConstPtr &item) const {
-    return item && item->sibilingLevel() == current_level_ && item->children_.empty() &&
+    return item && item->sibilingLevel() == current_level_ && !item->childLevel() &&
            isSelected(item);
   }
 
@@ -364,9 +264,9 @@ public:
   // Descending / Ascending
   // **********************
 
-  // can descend if the given item is in the current level and has a child
+  // can descend if the given item is in the current level and has a child level
   bool canDescend(const ItemConstPtr &item) const {
-    return item && item->sibilingLevel() == current_level_ && !item->children_.empty();
+    return item && item->sibilingLevel() == current_level_ && item->childLevel();
   }
 
   // unpoint and deselect all sibilings, select the given item
@@ -388,7 +288,7 @@ public:
   }
 
   // can ascend if the current level is not the first
-  bool canAscend() const { return current_level_->parent() != current_level_->root(); }
+  bool canAscend() const { return current_level_->depth() >= 2; }
 
   // unpoint and deselect all sibilings, deselect and move to the parent level
   void ascend() {
@@ -410,17 +310,19 @@ public:
 
   std::string toString() const {
     struct Internal {
-      static std::string toString(const Model *const model, const ItemConstPtr &item) {
-        const int depth(item->depth());
-        std::string str;
-        if (depth <= 0) { // root item
-          str += item->name_ + " " + itemIdStr(item) + "\n";
-        } else { // non-root item
-          str += std::string(depth * 2, ' ') + itemStateStr(model, item) + " " + item->name_ + " " +
-                 itemIdStr(item) + "\n";
-        }
-        for (const ItemConstPtr &child : item->children_) {
-          str += toString(model, child);
+      static std::string toString(const Model *const model, const ItemConstPtr &item,
+                                  const int n_indent = 0) {
+        std::string str(n_indent, ' ');
+        if (item) {
+          if (item->depth() > 0) {
+            str += itemStateStr(model, item) + " ";
+          }
+          str += item->name() + " " + itemIdStr(item) + "\n";
+          for (const ItemConstPtr &child : item->children()) {
+            str += toString(model, child, n_indent + 2);
+          }
+        } else {
+          str += "      -\n";
         }
         return str;
       }
@@ -434,12 +336,12 @@ public:
 
       static std::string itemIdStr(const ItemConstPtr &item) {
         std::ostringstream str;
-        str << "(i" << item->item_id_ << "-d" << item->depth() << ")";
+        str << "(i" << item->itemId() << "-d" << item->depth() << ")";
         return str.str();
       }
     };
 
-    return Internal::toString(this, current_level_->root());
+    return Internal::toString(this, items_.front());
   }
 
 protected:
@@ -448,15 +350,19 @@ protected:
   // ************
 
   void forceSelect(const ItemConstPtr &item) {
-    std::vector< std::int32_t > &ids(state_.selected_ids);
-    if (std::find(ids.begin(), ids.end(), item->item_id_) == ids.end()) {
-      ids.push_back(item->item_id_);
+    if (item) {
+      std::vector< std::int32_t > &ids(state_.selected_ids);
+      if (std::find(ids.begin(), ids.end(), item->itemId()) == ids.end()) {
+        ids.push_back(item->itemId());
+      }
     }
   }
 
   void forceDeselect(const ItemConstPtr &item) {
-    std::vector< std::int32_t > &ids(state_.selected_ids);
-    ids.erase(std::remove(ids.begin(), ids.end(), item->item_id_), ids.end());
+    if (item) {
+      std::vector< std::int32_t > &ids(state_.selected_ids);
+      ids.erase(std::remove(ids.begin(), ids.end(), item->itemId()), ids.end());
+    }
   }
 
 protected:
