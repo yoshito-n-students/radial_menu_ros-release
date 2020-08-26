@@ -2,7 +2,7 @@
 
 Radial menu on ROS1 for quick, accurate and intuitive selection by a joystick from 10+ items
 
-![](https://raw.githubusercontent.com/yoshito-n-students/radial_menu_ros/images/images/screenshot_v0_1_4.png)
+![](https://raw.githubusercontent.com/yoshito-n-students/radial_menu_ros/images/images/screenshot_v0_4_0.png)
 
 ## Tested environments
 * ROS Kinetic on Ubuntu 16.04
@@ -59,8 +59,14 @@ Radial menu on ROS1 for quick, accurate and intuitive selection by a joystick fr
             ...
         </item>
     </item>
-    <item name="Arm">
-        ...
+    <!-- An element can optionally have the attributes 'rows' and 'row'.     -->
+    <!-- In the example below, the item 'Arm' will have child items          -->
+    <!-- ['LEDs', null, 'Cameras', null, 'Motors', null].                    -->
+    <!-- Or it defaults to ['Motors', 'Cameras', 'LEDs'] with no attributes. -->
+    <item name="Arm" rows="6">
+        <item name="Motors" row="4" />
+        <item name="Cameras" row="2" />
+        <item name="LEDs" row="0" />
     </item>
 </item>
 ```

@@ -1,6 +1,8 @@
 #ifndef RADIAL_MENU_RVIZ_DISPLAY_BASE_HPP
 #define RADIAL_MENU_RVIZ_DISPLAY_BASE_HPP
 
+#include <memory>
+
 #include <radial_menu_model/model.hpp>
 #include <radial_menu_msgs/State.h>
 #include <radial_menu_rviz/image_overlay.hpp>
@@ -9,8 +11,6 @@
 #include <ros/exception.h>
 #include <ros/subscriber.h>
 #include <rviz/display.h>
-
-#include <boost/scoped_ptr.hpp>
 
 namespace radial_menu_rviz {
 
@@ -52,7 +52,8 @@ protected:
   }
 
   void updateDescription(const DescriptionProperty &prop) {
-    if (model_->setDescriptionFromParam(prop.param_name.toStdString())) {
+    const std::string param_name(prop.param_name.toStdString());
+    if (!param_name.empty() && model_->setDescriptionFromParam(param_name)) {
       state_ = model_->exportState();
       updateImage();
     }
@@ -68,13 +69,14 @@ protected:
     updateImage();
 
     // subscribe the new topic
+    const std::string topic(prop.topic.toStdString());
     try {
-      state_sub_ =
-          ros::NodeHandle().subscribe(prop.topic.toStdString(), 1, &DisplayBase::updateImage, this);
+      if (!topic.empty()) {
+        state_sub_ = ros::NodeHandle().subscribe(topic, 1, &DisplayBase::updateImage, this);
+      }
     } catch (const ros::Exception &error) {
       ROS_ERROR_STREAM(getName().toStdString()
-                       << ": error on subscribing topic ('" << prop.topic.toStdString()
-                       << "'): " << error.what());
+                       << ": error on subscribing '" << topic << "': " << error.what());
     }
   }
 
@@ -86,7 +88,8 @@ protected:
 
   // update menu image with the given menu state
   void updateImage(const radial_menu_msgs::StateConstPtr &new_state) {
-    if (state_->is_enabled != new_state->is_enabled || state_->pointed_id != new_state->pointed_id ||
+    if (state_->is_enabled != new_state->is_enabled ||
+        state_->pointed_id != new_state->pointed_id ||
         state_->selected_ids != new_state->selected_ids) {
       model_->setState(*new_state);
       state_ = new_state;
@@ -107,16 +110,16 @@ protected:
 
 protected:
   // property control via Rviz
-  boost::scoped_ptr< PropertyControl > prop_ctl_;
+  std::unique_ptr< PropertyControl > prop_ctl_;
   // menu tree model
   radial_menu_model::ModelPtr model_;
   // menu state subscriber
   ros::Subscriber state_sub_;
   radial_menu_msgs::StateConstPtr state_;
   // state drawer
-  boost::scoped_ptr< ImageDrawer > drawer_;
+  std::unique_ptr< ImageDrawer > drawer_;
   // overlay on Rviz
-  boost::scoped_ptr< ImageOverlay > overlay_;
+  std::unique_ptr< ImageOverlay > overlay_;
 };
 } // namespace radial_menu_rviz
 
